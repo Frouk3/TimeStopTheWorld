@@ -10,6 +10,7 @@ void TimeStop::Update() noexcept
 	DWORD base = (DWORD)GetModuleHandleA(NULL);
 	GameMenuStatus GameMenuState = *(GameMenuStatus*)(base + 0x17E9F9C);
 	bool IsForegroundWindow = *(bool*)(base + 0x19D509C);
+	DWORD player = *(DWORD*)(base + 0x19C1490);
 	if (IsForegroundWindow && GameMenuState == InGame)
 	{
 		auto SlowRateManager = GetcSlowRateManager();
@@ -17,12 +18,16 @@ void TimeStop::Update() noexcept
 		float ticks = SlowRateManager->m_fTicks;
 		if (GetAsyncKeyState(key) & 1)
 		{
-			if (ticks - LastTimeActive > (Upgradeable * 2500.0f) / 2.0f) // abt cooldown is bit of too much
+			if (ticks - LastTimeActive > (Upgradeable * 1000.0f) / 2.0f) // abt cooldown is bit of too much
 			{
 				LastTimeActive = ticks;
 				StartCooldown = false;
 			}
 			if (StartCooldown)
+				return;
+
+			short plAction = *(short*)(player + 0x618);
+			if (plAction == 69 || plAction == 70) // zangeki, inter zangeki mode
 				return;
 
 			Enabled = SlowRateManager->GetSlowRate(0) == 1.0f;
@@ -67,6 +72,8 @@ void TimeStop::Update() noexcept
 			SlowRateManager->SetSlowRate(0, 1.0f);
 			SlowRateManager->SetSlowRate(1, 1.0f);
 			SlowRateManager->SetSlowRate(2, 1.0f);
+			StartCooldown = true;
+			LastTimeActive = ticks;
 			once = true;
 		}
 	}
@@ -76,7 +83,7 @@ void TimeStop::LoadConfig() noexcept
 {
 	CIniReader iniReader("TimeStop.ini");
 
-	Upgradeable = iniReader.ReadInteger("TimeStop", "upgrade", 1);
+	Upgradeable = iniReader.ReadInteger("TimeStop", "upgrade", 2);
 	key = iniReader.ReadInteger("TimeStop", "key", 84);
 }
 
