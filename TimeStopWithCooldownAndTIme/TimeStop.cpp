@@ -7,16 +7,19 @@
 
 void TimeStop::Update() noexcept
 {
-	DWORD base = (DWORD)GetModuleHandleA(NULL);
+	DWORD base = shared::base;
 	GameMenuStatus GameMenuState = *(GameMenuStatus*)(base + 0x17E9F9C);
 	bool IsForegroundWindow = *(bool*)(base + 0x19D509C);
 	DWORD player = *(DWORD*)(base + 0x19C1490);
 	if (IsForegroundWindow && GameMenuState == InGame)
 	{
 		auto SlowRateManager = GetcSlowRateManager();
+		if (!SlowRateManager)
+			return;
+
 		static bool once = false;
 		float ticks = SlowRateManager->m_fTicks;
-		if (GetAsyncKeyState(key) & 1)
+		if (shared::IsKeyPressed(key))
 		{
 			if (ticks - LastTimeActive > (Upgradeable * 1000.0f) / 2.0f) // abt cooldown is bit of too much
 			{
@@ -33,7 +36,7 @@ void TimeStop::Update() noexcept
 			Enabled = SlowRateManager->GetSlowRate(0) == 1.0f;
 			if (rand() % 25 == 1)
 			{
-				Upgradeable += rand() % 5;
+				Upgradeable += (rand() % 5) + 1;
 				shared::Core_PlaySound("core_se_btl_battery_blue", 1);
 			}
 			once = false;

@@ -147,9 +147,11 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="game\cSlowRateManager.h" />
+    <ClInclude Include="game\cSlowRateUnit.h" />
     <ClInclude Include="game\GameFlags.h" />
     <ClInclude Include="game\GameMenuStatus.h" />
     <ClInclude Include="game\GameplayFlags.h" />
+    <ClInclude Include="game\Hw.h" />
     <ClInclude Include="game\shared.h" />
     <ClInclude Include="IniReader.h" />
     <ClInclude Include="ini_parser.hpp" />
