@@ -1,7 +1,6 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
 #include "TimeStop.h"
-#include "game/shared.h"
 #include <Windows.h>
 
 DWORD WINAPI thing(LPVOID) noexcept

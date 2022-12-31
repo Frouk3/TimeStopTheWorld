@@ -1,19 +1,23 @@
 #include "TimeStop.h"
-#include "game/cSlowRateManager.h"
-#include "game/shared.h"
-#include "game/GameMenuStatus.h"
+#include <cSlowRateManager.h>
+#include <shared.h>
+#include <GameMenuStatus.h>
 #include "IniReader.h"
 #include <Windows.h>
+#include <Pl0000.h>
+#include <cGameUIManager.h>
+#include <ARGB32.h>
+#include <cmath>
 
 void TimeStop::Update() noexcept
 {
 	DWORD base = shared::base;
-	GameMenuStatus GameMenuState = *(GameMenuStatus*)(base + 0x17E9F9C);
+	GameMenuStatus GameMenuState = (GameMenuStatus)g_GameMenuStatus;
 	bool IsForegroundWindow = *(bool*)(base + 0x19D509C);
-	DWORD player = *(DWORD*)(base + 0x19C1490);
+	Pl0000* player = (Pl0000*)g_cGameUIManager.m_pPl;
+	static cSlowRateManager* SlowRateManager = &g_cSlowRateManager;
 	if (IsForegroundWindow && GameMenuState == InGame)
 	{
-		auto SlowRateManager = GetcSlowRateManager();
 		if (!SlowRateManager)
 			return;
 
@@ -21,7 +25,7 @@ void TimeStop::Update() noexcept
 		float ticks = SlowRateManager->m_fTicks;
 		if (shared::IsKeyPressed(key))
 		{
-			if (ticks - LastTimeActive > (Upgradeable * 1000.0f) / 2.0f) // abt cooldown is bit of too much
+			if (ticks - LastTimeActive > ((Upgradeable * 1000.0f) / 5.0f) * SlowRateManager->m_fTickRate) // abt cooldown is bit of too much
 			{
 				LastTimeActive = ticks;
 				StartCooldown = false;
@@ -29,14 +33,13 @@ void TimeStop::Update() noexcept
 			if (StartCooldown)
 				return;
 
-			short plAction = *(short*)(player + 0x618);
-			if (plAction == 69 || plAction == 70) // zangeki, inter zangeki mode
+			if (player->m_nCurrentAction == 69 || player->m_nCurrentAction == 70) // zangeki, inter zangeki mode
 				return;
 
 			Enabled = SlowRateManager->GetSlowRate(0) == 1.0f;
-			if (rand() % 25 == 1)
+			if (shared::random(0, 25) == 0 && Enabled)
 			{
-				Upgradeable += (rand() % 5) + 1;
+				Upgradeable += shared::random(1, 5);
 				shared::Core_PlaySound("core_se_btl_battery_blue", 1);
 			}
 			once = false;
@@ -45,19 +48,22 @@ void TimeStop::Update() noexcept
 				SlowRateManager->SetSlowRate(0, 1.0f);
 				SlowRateManager->SetSlowRate(1, 1.0f);
 				SlowRateManager->SetSlowRate(2, 1.0f);
+				*(unsigned int*)(base + 0x17EA074) &= ~0x8000;
 			}
 			if (Enabled)
+			{
+				*(unsigned int*)(base + 0x17EA074) |= 0x8000;
 				shared::Core_PlaySound("core_se_btl_slow_in", 1);
+				LastTimeStopTicks = ticks;
+			}
 			else
 			{
 				StartCooldown = true;
 				shared::Core_PlaySound("core_se_btl_slow_out", 1);
 			}
-			if (Enabled)
-				LastTimeStopTicks = ticks;
 			SaveConfig();
 		}
-		if (Enabled && ticks - LastTimeStopTicks > Upgradeable * 1000.0f)
+		if (Enabled && ticks - LastTimeStopTicks > (Upgradeable * 1000.0f) * SlowRateManager->m_fTickRate)
 		{
 			StartCooldown = true;
 			Enabled = false;
@@ -69,6 +75,7 @@ void TimeStop::Update() noexcept
 			SlowRateManager->SetSlowRate(0, 1.0f * 3.33564095e-9f);
 			SlowRateManager->SetSlowRate(1, 1.0f / 3.33564095e-9f);
 			SlowRateManager->SetSlowRate(2, 1.0f * 3.33564095e-9f);
+			*(unsigned int*)(base + 0x17EA074) |= 0x8000;
 		}
 		if (!Enabled && !once)
 		{
@@ -78,7 +85,13 @@ void TimeStop::Update() noexcept
 			StartCooldown = true;
 			LastTimeActive = ticks;
 			once = true;
+			*(unsigned int*)(base + 0x17EA074) &= ~0x8000;
 		}
+	}
+	if (Enabled && GameMenuState == InMenu)
+	{
+		Enabled = false;
+		SlowRateManager->ResetSlowRate();
 	}
 }
 
