@@ -1,6 +1,7 @@
 #include "TimeStop.h"
 #include <cSlowRateManager.h>
 #include <shared.h>
+#include <common.h>
 #include <GameMenuStatus.h>
 #include "IniReader.h"
 #include <Windows.h>
@@ -40,7 +41,7 @@ void TimeStop::Update() noexcept
 			if (shared::random(0, 25) == 0 && Enabled)
 			{
 				Upgradeable += shared::random(1, 5);
-				shared::Core_PlaySound("core_se_btl_battery_blue", 1);
+				Core_PlaySound("core_se_btl_battery_blue", 1);
 			}
 			once = false;
 			if (!Enabled)
@@ -53,13 +54,13 @@ void TimeStop::Update() noexcept
 			if (Enabled)
 			{
 				*(unsigned int*)(base + 0x17EA074) |= 0x8000;
-				shared::Core_PlaySound("core_se_btl_slow_in", 1);
+				Core_PlaySound("core_se_btl_slow_in", 1);
 				LastTimeStopTicks = ticks;
 			}
 			else
 			{
 				StartCooldown = true;
-				shared::Core_PlaySound("core_se_btl_slow_out", 1);
+				Core_PlaySound("core_se_btl_slow_out", 1);
 			}
 			SaveConfig();
 		}
@@ -68,7 +69,7 @@ void TimeStop::Update() noexcept
 			StartCooldown = true;
 			Enabled = false;
 			LastTimeStopTicks = ticks;
-			shared::Core_PlaySound("core_se_btl_slow_out", 1);
+			Core_PlaySound("core_se_btl_slow_out", 1);
 		}
 		if (Enabled)
 		{
