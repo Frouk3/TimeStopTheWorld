@@ -147,70 +147,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
-    <ClInclude Include="game\Animation.h" />
-    <ClInclude Include="game\ARGB32.h" />
-    <ClInclude Include="game\BattleParameter.h" />
-    <ClInclude Include="game\BattleParameterImplement.h" />
-    <ClInclude Include="game\Behavior.h" />
-    <ClInclude Include="game\BehaviorAppBase.h" />
-    <ClInclude Include="game\cEspControler.h" />
-    <ClInclude Include="game\cGameUIManager.h" />
-    <ClInclude Include="game\CharacterControl.h" />
-    <ClInclude Include="game\cItemBase.h" />
-    <ClInclude Include="game\cItemPossessionBase.h" />
-    <ClInclude Include="game\cItemPossessionWeaponGranade.h" />
-    <ClInclude Include="game\cLockonPartsList.h" />
-    <ClInclude Include="game\cMesh.h" />
-    <ClInclude Include="game\cMeshBase.h" />
-    <ClInclude Include="game\cModel.h" />
-    <ClInclude Include="game\cModelBase.h" />
-    <ClInclude Include="game\cObj.h" />
-    <ClInclude Include="game\cParts.h" />
-    <ClInclude Include="game\cSlowRateManager.h" />
-    <ClInclude Include="game\cSlowRateUnit.h" />
-    <ClInclude Include="game\cVec4.h" />
-    <ClInclude Include="game\cXml.h" />
-    <ClInclude Include="game\cXmlBinary.h" />
-    <ClInclude Include="game\EntityHandle.h" />
-    <ClInclude Include="game\EspCtrlCustomImpl.h" />
-    <ClInclude Include="game\GameFlags.h" />
-    <ClInclude Include="game\GameMenuStatus.h" />
-    <ClInclude Include="game\GameplayFlags.h" />
-    <ClInclude Include="game\hkBaseObject.h" />
-    <ClInclude Include="game\hkpEntity.h" />
-    <ClInclude Include="game\hkpRigidBody.h" />
-    <ClInclude Include="game\hkpWorldObject.h" />
-    <ClInclude Include="game\hkReferencedObject.h" />
-    <ClInclude Include="game\Hw.h" />
-    <ClInclude Include="game\ModelSystem.h" />
-    <ClInclude Include="game\PhaseManager.h" />
-    <ClInclude Include="game\Pl0000.h" />
-    <ClInclude Include="game\Pl1400.h" />
-    <ClInclude Include="game\Pl1500.h" />
-    <ClInclude Include="game\PlayerManager.h" />
-    <ClInclude Include="game\PlayerManagerImplement.h" />
-    <ClInclude Include="game\PlBaseDLC.h" />
-    <ClInclude Include="game\SceneModelSystem.h" />
     <ClInclude Include="game\shared.h" />
     <ClInclude Include="IniReader.h" />
     <ClInclude Include="ini_parser.hpp" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="shared\shared.h" />
     <ClInclude Include="TimeStop.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="game\Behavior.cpp" />
-    <ClCompile Include="game\BehaviorAppBase.cpp" />
-    <ClCompile Include="game\cGameUIManager.cpp" />
-    <ClCompile Include="game\cObj.cpp" />
-    <ClCompile Include="game\cSlowRateManager.cpp" />
-    <ClCompile Include="game\cVec4.cpp" />
-    <ClCompile Include="game\EntityHandle.cpp" />
-    <ClCompile Include="game\PhaseManager.cpp" />
-    <ClCompile Include="game\Pl0000.cpp" />
-    <ClCompile Include="game\PlayerManagerImplement.cpp" />
-    <ClCompile Include="game\SceneModelSystem.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -218,6 +162,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TimeStop.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitmodules" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
