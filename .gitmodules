@@ -1,6 +1,0 @@
-[submodule "game"]
-	path = game
-	url = https://github.com/Frouk3/mgr-plugin-sdk
-[submodule "shared"]
-	path = shared
-	url = https://github.com/Frouk3/mgr-plugin-sdk
