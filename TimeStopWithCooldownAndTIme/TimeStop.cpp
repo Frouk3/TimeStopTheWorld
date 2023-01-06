@@ -38,7 +38,7 @@ void TimeStop::Update() noexcept
 				return;
 
 			Enabled = SlowRateManager->GetSlowRate(0) == 1.0f;
-			if (shared::random(0, 25) == 0 && Enabled)
+			if (shared::random(1, 40) == 1 && Enabled)
 			{
 				Upgradeable += shared::random(1, 5);
 				Core_PlaySound("core_se_btl_battery_blue", 1);
@@ -87,6 +87,16 @@ void TimeStop::Update() noexcept
 			LastTimeActive = ticks;
 			once = true;
 			*(unsigned int*)(base + 0x17EA074) &= ~0x8000;
+		}
+
+		static float lastTime = 0.0f;
+		if (Enabled && ticks - LastTimeStopTicks > (Upgradeable * (1000.0f * SlowRateManager->m_fTickRate)) - 4000.0f * SlowRateManager->m_fTickRate)
+		{
+			if (ticks - lastTime > 1000.0f * SlowRateManager->m_fTickRate)
+			{
+				Core_PlaySound("core_se_sys_title_start", 1);
+				lastTime = ticks;
+			}
 		}
 	}
 	if (Enabled && GameMenuState == InMenu)
