@@ -49,18 +49,22 @@ void TimeStop::Update() noexcept
 				SlowRateManager->SetSlowRate(0, 1.0f);
 				SlowRateManager->SetSlowRate(1, 1.0f);
 				SlowRateManager->SetSlowRate(2, 1.0f);
+
 				*(unsigned int*)(base + 0x17EA074) &= ~0x8000;
 			}
 			if (Enabled)
 			{
 				*(unsigned int*)(base + 0x17EA074) |= 0x8000;
-				Core_PlaySound("core_se_btl_slow_in", 1);
+
+				if (needToPlaySound) Core_PlaySound("core_se_btl_slow_in", 1);
+
 				LastTimeStopTicks = ticks;
 			}
 			else
 			{
 				StartCooldown = true;
-				Core_PlaySound("core_se_btl_slow_out", 1);
+
+				if (needToPlaySound) Core_PlaySound("core_se_btl_slow_out", 1);
 			}
 			SaveConfig();
 		}
@@ -69,7 +73,8 @@ void TimeStop::Update() noexcept
 			StartCooldown = true;
 			Enabled = false;
 			LastTimeStopTicks = ticks;
-			Core_PlaySound("core_se_btl_slow_out", 1);
+
+			if (needToPlaySound) Core_PlaySound("core_se_btl_slow_out", 1);
 		}
 		if (Enabled)
 		{
@@ -94,7 +99,8 @@ void TimeStop::Update() noexcept
 		{
 			if (ticks - lastTime > 1000.0f * SlowRateManager->m_fTickRate)
 			{
-				Core_PlaySound("core_se_sys_title_start", 1);
+				if (playTickSounds) Core_PlaySound("core_se_sys_title_start", 1);
+
 				lastTime = ticks;
 			}
 		}
@@ -115,6 +121,8 @@ void TimeStop::LoadConfig() noexcept
 
 	Upgradeable = iniReader.ReadInteger("TimeStop", "upgrade", 2);
 	key = iniReader.ReadInteger("TimeStop", "key", 84);
+	needToPlaySound = iniReader.ReadInteger("TimeStop", "playSound", 1) == 1;
+	playTickSounds = iniReader.ReadInteger("TimeStop", "playTickSound", 1) == 1;
 }
 
 void TimeStop::SaveConfig() noexcept
@@ -123,4 +131,6 @@ void TimeStop::SaveConfig() noexcept
 
 	iniReader.WriteInteger("TimeStop", "upgrade", Upgradeable);
 	iniReader.WriteInteger("TimeStop", "key", key);
+	iniReader.WriteInteger("TimeStop", "playSound", needToPlaySound);
+	iniReader.WriteInteger("TimeStop", "playTickSound", playTickSounds);
 }
