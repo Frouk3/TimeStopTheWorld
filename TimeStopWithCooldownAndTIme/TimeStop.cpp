@@ -104,6 +104,9 @@ void TimeStop::Update() noexcept
 		Enabled = false;
 		SlowRateManager->ResetSlowRate();
 	}
+
+	if (!Enabled)
+		Sleep(20);
 }
 
 void TimeStop::LoadConfig() noexcept
